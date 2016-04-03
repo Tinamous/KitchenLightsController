@@ -163,7 +163,7 @@
 <text x="46.785" y="32.495" size="1.27" layer="25" font="vector" rot="R180">3v3</text>
 <text x="46.355" y="4.445" size="1.27" layer="25" font="vector" rot="R180">GND</text>
 <text x="7.415" y="21.065" size="1.27" layer="25" font="vector">IoT Low Voltage Lights Controller</text>
-<text x="7.415" y="19.16" size="1.016" layer="25" font="vector">(c) Tinamous.com - S.Harrison - 27 March 2016</text>
+<text x="7.415" y="19.16" size="1.016" layer="25" font="vector">(c) Tinamous.com - S.Harrison - 03 April 2016</text>
 <text x="86.79" y="0.745" size="1.016" layer="25" font="vector">V2.03</text>
 <text x="12.685" y="80.12" size="1.778" layer="25">12V DC</text>
 <text x="23.5275" y="85.5175" size="2.54" layer="25">+</text>

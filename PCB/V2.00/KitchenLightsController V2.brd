@@ -175,7 +175,7 @@
 <text x="6.78" y="73.4525" size="0.8128" layer="25">3v3</text>
 <text x="6.7775" y="76.0875" size="0.8128" layer="25">SCL</text>
 <text x="6.7775" y="78.6275" size="0.8128" layer="25">SDA</text>
-<text x="77.82" y="80.12" size="2.54" layer="25">+</text>
+<text x="76.55" y="80.12" size="2.54" layer="25">+</text>
 <text x="89.0125" y="63.9275" size="1.27" layer="25" font="vector" rot="R180">5V</text>
 <text x="7.3025" y="17.78" size="1.016" layer="25" font="vector">Github.com/Tinamous/KitchenLightsController</text>
 <text x="13.13" y="24.24" size="0.8128" layer="25" font="vector">A1</text>

@@ -8,7 +8,7 @@ $fn = 20;
 // Normal offset is center. Use this
 // to push the box left/right/up/down
 pcbXOffsetInBox = -0;
-pcbYOffsetInBox = -0;
+pcbYOffsetInBox = 2;
 
 pcbWidth = 100;
 pcbHeight = 90;
@@ -17,7 +17,7 @@ pcbMountOffset = 5; // m55 in from top/bottom for the PCB mounting hole
 pcbOffsetX = ((boxWidth - pcbWidth) /2) + pcbXOffsetInBox; // 7.5mm
 pcbOffsetY = ((boxDepth - pcbHeight) /2) + pcbYOffsetInBox;  // 15mm
 
-switchDiameter = 16.0;
+switchDiameter = 17.5; 
 switchX = (boxWidth/4) *3;
 switchY = boxHeight - 15;
 
@@ -29,10 +29,12 @@ includeMountingPosts = false;
 // Which part to build?
 showBox = true;
 showLid = false;
+includeSwitchHole = false;
 
 // Debugging
-showPcb = true;
-showSwitch = true;
+showPcb = false;
+showSwitch = false;
+
 
 // -----------------------------------------
 // -----------------------------------------
@@ -83,7 +85,9 @@ module OuterBox() {
                 MountingHoles();
             }
             
-            SwitchHole();
+            if (includeSwitchHole) {
+                SwitchHole();
+            }
             
             cableExitHoles();
             
@@ -95,21 +99,18 @@ module OuterBox() {
 }
 
 module cableExitHole(width) {
-    cube([width, 10,18]);
+    #cube([width, 10,20]);
     translate([ (width/2), 10, 0]) {
         rotate([90,0,0]) {
-            cylinder(d=width, h=10);
+            #cylinder(d=width, h=10);
         }
     }
 }
 
 module powerConnectorHole() {   
     
-    //[11.4, 82.7, 0]
-    translate([pcbOffsetX + 9.5, boxDepth-4,  standOffHeight]) {    
-        #cube([16,8, 14]);
-        
-        //cube([12,14.6, 10.4]);
+    translate([pcbOffsetX + 9.5, boxDepth-4,  standOffHeight+1]) {    
+        #cube([16,7, 11]);
     }
 }
 
@@ -124,7 +125,7 @@ module usbConnectorHole() {
 // to exit.
 module cableExitHoles() {
     
-    translate([pcbOffsetX, boxDepth -4,  boxHeight-8]) {    
+    translate([pcbOffsetX, boxDepth -4,  boxHeight-12]) {    
         // Channel 1
         translate([20.5, 0, 0]) {
             cableExitHole(5.2);
@@ -163,7 +164,7 @@ module PcbMounts() {
 
 module PcbMount(x,y) {
 mountSize = 8;
-mountHoleSize = 4;
+mountHoleSize = 4.5;
     
     translate([x,y,0]) {
         // Outer pad + inner hole (Not all the way through!)
@@ -298,13 +299,13 @@ module ShowPcb(x,y) {
                     }
                     
                     // Add on the socket for the main DC input
-                    translate([11.4, 82.7, 0]) {
-                        cube([12,14.6, 10.4]);
+                    translate([11.4, 82.7, 1.6]) {
+                        cube([12,14.6, 8.5]);
                         
                         // TODO: Add projection for plug.
                         
                         translate([0, 16,1.6]) {
-                            cube([12,25, 8]);
+                            cube([12,25, 6]);
                         }
                     }
                     
@@ -382,20 +383,25 @@ module ShowPcb(x,y) {
     }
 }
 
+// Lid
 module Lid() {
-    difference() {
-        union() {
-            GenericBase(boxWidth,boxDepth,2);
-            
-            translate([2.1,2.1,-6]) {
-                GenericBase(boxWidth - 4.2,boxDepth-4.2,8);
+    // 2mm overlap.
+    translate([-2,-2,0]) { 
+        difference() {
+            union() {
+                GenericBase(boxWidth+4,boxDepth+4,8);
+                
+                //translate([2.1,2.1,-6]) {
+                    //GenericBase(boxWidth - 4.2,boxDepth-4.2,8);
+                //}
             }
-        }
-        union() {
-            LidHoles();
-            
-            translate([4,4,-6]) {
-                GenericBase(boxWidth - 8,boxDepth-8,6);
+            union() {
+                //LidHoles();
+                
+                translate([1.5,1.5,0]) {
+                    // 0.5mm gap all around.
+                    #GenericBase(boxWidth + 1, ,boxDepth+1,6);
+                }
             }
         }
     }
@@ -452,13 +458,13 @@ if (showSwitch) {
         
         // Approx switch body length = 38mm;
         translate([switchX,switchY,-38]) {
-            cylinder(d=switchDiameter, h=38);
+            cylinder(d=16.5, h=38);
         }
     }
 }
 
 if (showLid) {
-    translate([0,0,65]) {
+    translate([0,0,42]) {
         Lid();
     }
 }

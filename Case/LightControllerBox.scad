@@ -27,8 +27,8 @@ includeHoles = false;
 includeMountingPosts = false;
 
 // Which part to build?
-showBox = true;
-showLid = false;
+showBox = false;
+showLid = true;
 includeSwitchHole = false;
 
 // Debugging
@@ -385,6 +385,9 @@ module ShowPcb(x,y) {
 
 // Lid
 module Lid() {
+    
+lidToCaseGap = 0.3;
+    
     // 2mm overlap.
     translate([-2,-2,0]) { 
         difference() {
@@ -398,9 +401,9 @@ module Lid() {
             union() {
                 //LidHoles();
                 
-                translate([1.5,1.5,0]) {
+                translate([2-lidToCaseGap,2-lidToCaseGap,0]) {
                     // 0.5mm gap all around.
-                    #GenericBase(boxWidth + 1, ,boxDepth+1,6);
+                    #GenericBase(boxWidth + (2*lidToCaseGap), boxDepth+(2*lidToCaseGap),7);
                 }
             }
         }

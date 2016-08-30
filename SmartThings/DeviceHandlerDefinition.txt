@@ -1,0 +1,119 @@
+/**
+ *  Particle Photon Low Voltage Lighting Controller
+ *
+ *  Copyright 2016 Analysis UK Ltd
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the License at:
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ *  for the specific language governing permissions and limitations under the License.
+ *
+ */
+ 
+preferences {
+    input("deviceId", "text", title: "Particle Device ID")
+    input("token", "text", title: "Particle API Access Token")
+}
+
+metadata {
+	definition (name: "Particle Photon Low Voltage Lighting Controller", namespace: "tinamous/iotlighting", author: "Stephen Harrison") {
+		capability "Switch"
+	
+        attribute "lightset", "string"   
+	
+		command "upper"
+		command "lower"
+        command "sink"
+		command "uv"
+	}
+
+	// simulator metadata
+	simulator {
+	}
+
+	// UI tile definitions
+	tiles {
+		standardTile("switch", "device.switch", width: 2, height: 2, canChangeIcon: true) {
+			state "off", label: '${name}', action: "switch.on", icon: "st.switches.light.off", backgroundColor: "#ffffff"
+			state "on", label: '${name}', action: "switch.off", icon: "st.switches.light.on", backgroundColor: "#79b821"
+		}
+
+        standardTile("Upper", "device.upper", height:1, width:1) {
+            state "default", label:'Upper', action:"upper", unit:"", icon:"st.illuminance.illuminance.light", backgroundColor: "#FFE303"
+        } 
+
+        standardTile("Lower", "device.lower", height:1, width:1) {
+            state "default", label:'Lower', action:"lower", unit:"", icon:"st.illuminance.illuminance.light", backgroundColor: "#FFE303"
+        } 
+
+        standardTile("Sink", "device.sink", height:1, width:1) {
+            state "default", label:'Sink', action:"sink", unit:"", icon:"st.illuminance.illuminance.light", backgroundColor: "#FFE303"
+        } 
+
+        standardTile("UV", "device.uv", height:1, width:1) {
+            state "default", label:'UV', action:"uv", unit:"", icon:"st.illuminance.illuminance.light", backgroundColor: "#FFE303"
+        } 
+
+		main(["switch"])
+		     details(["switch", "Upper", "Lower", "Sink", "UV"])
+	}
+}
+
+def parse(String description) {
+	log.error "This device does not support incoming events"
+	return null
+}
+
+def upper() {
+    sendEvent(name: "lightset", value: "UPPER");
+    sendon();
+}
+
+def lower() {
+    sendEvent(name: "lightset", value: "LOWER");
+    sendon();
+}
+
+def sink() {
+    sendEvent(name: "lightset", value: "SINK");
+    sendon();
+}
+
+def uv() {
+    sendEvent(name: "lightset", value: "UV");
+    sendon();
+}
+
+def on() {
+	log.debug "on()"
+	sendEvent(name: "switch", value: "on")
+	sendon();
+}
+
+def off() {
+	log.debug "off()"
+	sendEvent(name: "switch", value: "off")
+    sendoff(); 
+}
+
+private sendon() {
+        // Particle API Call to "off" function
+	httpPost(
+		uri: "https://api.spark.io/v1/devices/${deviceId}/on",
+        body: [access_token: token, command: device.currentValue("lightset")],  
+	) {response -> log.debug (response.data)}
+    log.debug device.currentValue("lightset");
+}
+
+private sendoff() {
+        // Particle API Call to "off" function
+	httpPost(
+		uri: "https://api.spark.io/v1/devices/${deviceId}/off",
+        body: [access_token: token, command: device.currentValue("lightset")],  
+	) {response -> log.debug (response.data)}
+    log.debug device.currentValue("lightset");
+}
